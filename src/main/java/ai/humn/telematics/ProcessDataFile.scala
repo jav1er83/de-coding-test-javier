@@ -1,10 +1,6 @@
 package ai.humn.telematics
 
 import scala.io.Source
-import scala.collection.Iterator
-
-
-
 
 object ProcessDataFile {
 
