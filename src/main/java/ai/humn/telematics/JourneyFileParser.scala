@@ -37,7 +37,8 @@ object JourneyFileParser {
    */
   def isValid(parsedLine: Array[String]): Boolean = {
     parsedLine.length == 10 &
-      buildJourney(parsedLine).duration > 0
+      buildJourney(parsedLine).duration >= 0 &
+      buildJourney(parsedLine).distance >= 0
   }
 
   /**

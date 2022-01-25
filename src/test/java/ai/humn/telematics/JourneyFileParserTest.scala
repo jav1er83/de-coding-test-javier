@@ -10,15 +10,13 @@ import scala.io.Source
 @RunWith(classOf[JUnitRunner])
 class JourneyFileParserTest extends FlatSpec with Matchers {
 
-  //val testFilePath = this.getClass.getClassLoader.getResource("2021-10-05_journeys.csv")
-  //val testSource = Source.fromFile(testFilePath.toString)
   val stream: InputStream = getClass.getResourceAsStream("/2021-10-05_journeys.csv")
   val testSource: Source = scala.io.Source.fromInputStream( stream )
 
-  it should "generate 7 Journeys from test file " in {
-    // There is 1 duplicate and 1 invalid journey in the test file, so it should generate only 7
+  it should "generate only valid Journeys from test file " in {
+    // There is 1 duplicate and 2 invalid journeys in the test file, so it should generate only 6
     val journeys = JourneyFileParser.parseJourneys(testSource)
-    assert(journeys.length == 7)
+    assert(journeys.length == 6)
   }
 
   it should "correctly parse one correct CSV line" in {
