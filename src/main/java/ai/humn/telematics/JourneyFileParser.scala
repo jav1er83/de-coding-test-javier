@@ -58,14 +58,14 @@ object JourneyFileParser {
   def buildJourney(csvFields: Array[String]): Journey = {
     Journey(journeyId = csvFields(0),
       driverId = csvFields(1),
-      startTime = csvFields(2).toLong,
-      endTime = csvFields(3).toLong,
-      startLat = csvFields(4).toFloat,
-      startLon = csvFields(5).toFloat,
-      endLat = csvFields(6).toFloat,
-      endLon = csvFields(7).toFloat,
-      startOdometer = csvFields(8).toLong,
-      endOdometer = csvFields(9).toLong
+      startTime = csvFields(2).toDouble,
+      endTime = csvFields(3).toDouble,
+      startLat = csvFields(4).toDouble,
+      startLon = csvFields(5).toDouble,
+      endLat = csvFields(6).toDouble,
+      endLon = csvFields(7).toDouble,
+      startOdometer = csvFields(8).toDouble,
+      endOdometer = csvFields(9).toDouble
     )
   }
 

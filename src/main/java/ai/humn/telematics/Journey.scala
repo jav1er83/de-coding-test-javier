@@ -2,17 +2,17 @@ package ai.humn.telematics
 
 case class Journey(journeyId: String,
                    driverId: String,
-                   startTime: Long,
-                   endTime: Long,
-                   startLat: Float,
-                   startLon: Float,
-                   endLat: Float,
-                   endLon: Float,
-                   startOdometer: Long,
-                   endOdometer: Long)
+                   startTime: Double,
+                   endTime: Double,
+                   startLat: Double,
+                   startLon: Double,
+                   endLat: Double,
+                   endLon: Double,
+                   startOdometer: Double,
+                   endOdometer: Double)
 {
   /** Duration in ms of a journey */
-  def duration: Long = endTime - startTime
+  def duration: Double = endTime - startTime
 
   /** Distance in Kms of a journey */
   def distance: Double = endOdometer - startOdometer

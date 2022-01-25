@@ -28,7 +28,7 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
 
   it should "correctly build a journey from a valid parsed line" in {
     val parsedLine = Array("000005","driver_b","1633430362000","1633430422000","0.125","0.458","0.125","0.458","123460","123461")
-    val expected = Journey("000005","driver_b",1633430362000L,1633430422000L,0.125f,0.458f,0.125f,0.458f,123460L,123461L)
+    val expected = Journey("000005","driver_b",1633430362000.0d,1633430422000.0d,0.125d,0.458d,0.125d,0.458d,123460.0d,123461.0d)
     assert(JourneyFileParser.buildJourney(parsedLine) === expected)
   }
 
