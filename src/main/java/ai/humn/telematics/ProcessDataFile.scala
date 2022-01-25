@@ -1,44 +1,40 @@
 package ai.humn.telematics
 
-import scala.collection.mutable.ListBuffer
 import scala.io.Source
+import scala.collection.Iterator
+
+
+case class Journey(journeyId: String,
+                   driverId: String,
+                   startTime: Long,
+                   endTime: Long,
+                   startLat: Float,
+                   startLon: Float,
+                   endLat: Float,
+                   endLon: Float,
+                   startOdometer: Long,
+                   endOdometer: Long)
+{
+  def duration: Long = endTime - startTime
+}
 
 object ProcessDataFile {
 
-  def main(args: Array[String]) = {
+  def main(args: Array[String]): Unit = {
 
-    // read file path from args
-    var x = args(0)
-
-    // This is the file
-    val y = Source.fromFile(x)
-
-    // All of the lines in the file
-    var l: Seq[String] = y.getLines().toList
-
-    // Make a variable to hold the parsed lines from the file.
-    var results = ListBuffer[ Array[String] ]()
-
-    // parse each line as csv to a collection
-    for (a <- 0 until l.length) {
-          results += l(a).split(",")
-    }
-
-    // This is a collection of the journey lines
-    val j = results.toList
+    // Parse input CSV file into a list of Journeys
+    val inputPath = args(0)
+    val source = Source.fromFile(inputPath)
+    val journeys = parseJourneys(source)
 
     // 1. Find journeys that are 90 minutes or more.
-    println("Journeys of 90 minutes or more.")
-    var i = 0
-    var ok = true
-    while(ok){
-      if( j(i)(2).toLong - j(i)(3).toLong >= 90 * 1000 * 60 ){
-        println("This journey took longer than 90 minutes")
-        println(j(i).mkString(","))
-      }
-      i = i + 1
-      if( i >= j.size ) ok = false
+    println("Journeys longer than 90 minutes:")
+    for (journey <- journeys) {
+      val ninetyMins = 90 * 60 * 1000
+      if (journey.duration > ninetyMins) println(journey.journeyId)
     }
+
+    source.close()
 
     // need to do the
     // 2. Find the average speed per journey in kph.
@@ -53,6 +49,42 @@ object ProcessDataFile {
     // we somehow need to
     // 4. Find the most active driver - the driver who has driven the most kilometers.
 
+  }
+
+
+  def parseJourneys(source: Source): Iterator[Journey] = {
+    val rawLines = source.getLines()
+    rawLines.next() // skip header
+    // Parse CSV Lines
+    val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
+    val validLines = parsedLines.filter(isValid)
+    buildJourneys(validLines)
+  }
+
+  def parseCsvLine(line: String): Array[String] = {
+    line.split(",")
+  }
+
+  def isValid(parsedLine: Array[String]): Boolean = {
+    true
+  }
+
+  def buildJourneys(parsedLines: Iterator[Array[String]]): Iterator[Journey] = {
+    for (line <- parsedLines) yield buildJourney(line)
+  }
+
+  def buildJourney(csvFields: Array[String]): Journey = {
+    Journey(journeyId = csvFields(0),
+      driverId = csvFields(1),
+      startTime = csvFields(2).toLong,
+      endTime = csvFields(3).toLong,
+      startLat = csvFields(4).toFloat,
+      endLat = csvFields(5).toFloat,
+      startLon = csvFields(6).toFloat,
+      endLon = csvFields(7).toFloat,
+      startOdometer = csvFields(8).toLong,
+      endOdometer = csvFields(9).toLong
+    )
   }
 
 }
