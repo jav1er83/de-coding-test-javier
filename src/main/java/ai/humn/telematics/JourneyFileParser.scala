@@ -16,7 +16,11 @@ object JourneyFileParser {
     // Parse CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
     val validLines = parsedLines.filter(isValid)
-    buildJourneys(validLines)
+
+    val journeys = buildJourneys(validLines)
+
+    // Drop duplicates:  // TODO drop duplicates of just journey id?
+    journeys.toStream.distinct.toIterator
   }
 
   /**
@@ -32,7 +36,8 @@ object JourneyFileParser {
    * @return true if line is valid else otherwise
    */
   def isValid(parsedLine: Array[String]): Boolean = {
-    true  //TODO: implement validation
+    parsedLine.length == 10 &
+      buildJourney(parsedLine).duration > 0
   }
 
   /**
@@ -55,8 +60,8 @@ object JourneyFileParser {
       startTime = csvFields(2).toLong,
       endTime = csvFields(3).toLong,
       startLat = csvFields(4).toFloat,
-      endLat = csvFields(5).toFloat,
-      startLon = csvFields(6).toFloat,
+      startLon = csvFields(5).toFloat,
+      endLat = csvFields(6).toFloat,
       endLon = csvFields(7).toFloat,
       startOdometer = csvFields(8).toLong,
       endOdometer = csvFields(9).toLong
