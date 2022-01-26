@@ -8,27 +8,16 @@ object ProcessDataFile {
 
     // Parse input CSV file into a list of Journeys
     val inputPath = args(0)
-    val source = Source.fromFile(inputPath)
-    val journeys = JourneyFileParser.parseJourneys(source).toList
-    source.close()
+    val journeySet = parseJourneys(inputPath)
 
     // 1. Find journeys that are 90 minutes or more.
-    println("Journeys longer than 90 minutes:")
-    for (journey <- journeys) {
-      val ninetyMins = 90 * 60 * 1000
-      if (journey.duration > ninetyMins) println(journey)
-    }
+    printLongJourneys(journeySet)
 
     // 2. Find the average speed per journey in kph.
-    println("Average speed per (valid) journey:")
-    for (journey <- journeys) println(journey)
+    printAvgSpeeds(journeySet)
 
     // 3. Find the total mileage by driver for the whole day.
-    val journeySet = JourneySet(journeys)
-    println("Mileage By Driver")
-    for ((driverId, distance) <- journeySet.mileageByDriver) {
-      println(driverId+" drove "+ distance+" kilometers")
-    }
+    printDriverMileages(journeySet)
 
     // This part is the last part of the puzzle
     // This jira was a little bit unclear.
@@ -36,8 +25,49 @@ object ProcessDataFile {
     // for all of the journeys.
     // we somehow need to
     // 4. Find the most active driver - the driver who has driven the most kilometers.
-    val (mostActiveDriverId, distance) = journeySet.mostActiveDriver
-    println("Most active driver is "+mostActiveDriverId)
+    printMostActiveDriver(journeySet)
 
+  }
+
+  /**
+   * Parses a source CSV file into a JourneySet object
+   * @param path CSV file path
+   * @return JourneySet object with info of all parsed journeys
+   */
+  def parseJourneys(path: String): JourneySet = {
+    val source = Source.fromFile(path)
+    val journeys = JourneyFileParser.parseJourneys(source).toList
+    source.close()
+    JourneySet(journeys)
+  }
+
+  def printLongJourneys(journeySet: JourneySet)  {
+    println("Journeys longer than 90 minutes:")
+    for (journey <- journeySet.journeys) {
+      val ninetyMins = 90 * 60 * 1000
+      if (journey.duration > ninetyMins) println(journey)
+    }
+    println
+  }
+
+  def printAvgSpeeds(journeySet: JourneySet) {
+    println("Average speed per (valid) journey:")
+    for (journey <- journeySet.journeys) println(journey)
+    println
+  }
+
+  def printDriverMileages(journeySet: JourneySet) {
+
+    println("Mileage By Driver")
+    for ((driverId, distance) <- journeySet.mileageByDriver) {
+      println(driverId+" drove "+ distance+" kilometers")
+    }
+    println
+  }
+
+  def printMostActiveDriver(journeySet: JourneySet) {
+    val (mostActiveDriverId, _) = journeySet.mostActiveDriver
+    println("Most active driver is "+mostActiveDriverId)
+    println
   }
 }
