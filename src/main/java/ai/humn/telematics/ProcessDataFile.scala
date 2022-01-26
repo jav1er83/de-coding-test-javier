@@ -36,6 +36,8 @@ object ProcessDataFile {
     // for all of the journeys.
     // we somehow need to
     // 4. Find the most active driver - the driver who has driven the most kilometers.
+    val (mostActiveDriverId, distance) = journeySet.mostActiveDriver
+    println("Most active driver is "+mostActiveDriverId)
 
   }
 }
