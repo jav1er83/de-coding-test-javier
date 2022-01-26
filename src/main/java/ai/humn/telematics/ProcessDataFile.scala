@@ -23,10 +23,12 @@ object ProcessDataFile {
     println("Average speed per (valid) journey:")
     for (journey <- journeys) println(journey)
 
-
-
-    // her eis where I will
     // 3. Find the total mileage by driver for the whole day.
+    val journeySet = JourneySet(journeys)
+    println("Mileage By Driver")
+    for ((driverId, distance) <- journeySet.mileageByDriver) {
+      println(driverId+" drove "+ distance+" kilometers")
+    }
 
     // This part is the last part of the puzzle
     // This jira was a little bit unclear.
