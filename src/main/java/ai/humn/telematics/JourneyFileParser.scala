@@ -66,7 +66,8 @@ object JourneyFileParser {
   /**
    * Builds a Journey object from a parsed CSV line (an array of CSV fields)
    * @param csvFields
-   * @return Journey object built from the CSV fields
+   * @return Try[Journey] object built from the CSV fields. It can be a Success(Journey)
+   *         if everything goes fine or a Failure(Exception) if some exception occurs when trying to build the Journey
    */
   def buildJourney(csvFields: Array[String]): Try[Journey] = {
     Try(
