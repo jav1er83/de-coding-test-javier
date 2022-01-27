@@ -19,6 +19,15 @@ case class Journey(journeyId: String,
 
   /** Average speed of a journey in Km/h */
   def avgSpeed: Double = {
+    // If no distance was travelled, speed will be 0:
+    if (distance <= 0) return 0.0
+
+    // If no duration is recorded for the trip, we cannot compute speed (it would be infinite).
+    // We also return 0 in this case.
+    if (duration <= 0) return 0.0
+
+    // For usual cases where we have valid distance and duration, we just
+    // transform trip duration to hours and divide distance/duration since we want to return Km/h:
     val durationInHours = duration / (1000 * 60 * 60)
     distance / durationInHours
   }
