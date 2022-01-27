@@ -6,21 +6,27 @@ import scala.io.Source
 object JourneyFileParser {
 
   /**
-   * Parses a CSV source into an iterable of Journeys
-   * @param source
-   * @return iterator on parsed Journeys from the source
+   * Parses a CSV source into a JourneySet
+   * @param source scala.io.Source pointing to the input CSV file
+   * @return JourneySet containing all (valid) journeys on the original CSV source file
    */
-  def parseJourneys(source: Source): Iterator[Journey] = {
+  def parseJourneys(source: Source): JourneySet = {
     val rawLines = source.getLines()
     rawLines.next() // skip header
     // Parse CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
-    val validLines = parsedLines.filter(isValid)
+    val validatedLines = parsedLines.filter(isValid) // drop invalid lines
 
-    val journeys = buildJourneys(validLines)
+    val journeys = buildJourneys(validatedLines)
+
+    // Drop invalid journeys:
+    val validatedJourneys = journeys.filter(_.isValid)
 
     // Drop duplicates:  // TODO drop duplicates of just journey id?
-    journeys.toStream.distinct.toIterator
+    val dedupJourneys = validatedJourneys.toStream.distinct
+
+    // Build a JourneySet with the deduplicated & validated journeys:
+    JourneySet(dedupJourneys)
   }
 
   /**
@@ -36,9 +42,7 @@ object JourneyFileParser {
    * @return true if line is valid else otherwise
    */
   def isValid(parsedLine: Array[String]): Boolean = {
-    parsedLine.length == 10 &
-      buildJourney(parsedLine).duration >= 0 &
-      buildJourney(parsedLine).distance >= 0
+    parsedLine.length == 10
   }
 
   /**

@@ -32,7 +32,8 @@ case class Journey(journeyId: String,
     distance / durationInHours
   }
 
-  override def toString: String = {
-    "journeyId: "+journeyId+" "+driverId+" distance "+distance+" durationMS "+duration+" avgSpeed in kph was "+avgSpeed
+  /** Validates a Journey */
+  def isValid: Boolean = {
+    duration >= 0 & distance >= 0
   }
 }

@@ -6,9 +6,11 @@ object ProcessDataFile {
 
   def main(args: Array[String]): Unit = {
 
-    // Parse input CSV file into a list of Journeys
-    val inputPath = args(0)
-    val journeySet = parseJourneys(inputPath)
+    val inputPath = parseCmdParams(args)
+
+    // Parse input CSV file into a JourneySet:
+    val source = Source.fromFile(inputPath)
+    val journeySet = JourneyFileParser.parseJourneys(source)
 
     // 1. Find journeys that are 90 minutes or more.
     printLongJourneys(journeySet)
@@ -22,18 +24,17 @@ object ProcessDataFile {
     // 4. Find the most active driver - the driver who has driven the most kilometers.
     printMostActiveDriver(journeySet)
 
+    // Close the input file
+    source.close()
   }
 
-  /**
-   * Parses a source CSV file into a JourneySet object
-   * @param path CSV file path
-   * @return JourneySet object with info of all parsed journeys
-   */
-  def parseJourneys(path: String): JourneySet = {
-    val source = Source.fromFile(path)
-    val journeys = JourneyFileParser.parseJourneys(source).toList
-    source.close()
-    JourneySet(journeys)
+  def parseCmdParams(args: Array[String]): String = {
+    if (args.length == 0) {
+      println("Please, provide an input path to process. Example:")
+      println("ProcessDataFile ./2021-10-05_journeys.csv")
+      System.exit(0)
+    }
+    args(0)
   }
 
   def printLongJourneys(journeySet: JourneySet)  {
@@ -47,7 +48,10 @@ object ProcessDataFile {
 
   def printAvgSpeeds(journeySet: JourneySet) {
     println("Average speed per (valid) journey:")
-    for (journey <- journeySet.journeys) println(journey)
+    for (j <- journeySet.journeys) {
+      val journeySummary = "journeyId: "+j.journeyId+" "+j.driverId+" distance "+j.distance+" durationMS "+j.duration+" avgSpeed in kph was "+j.avgSpeed
+      println(journeySummary)
+    }
     println
   }
 
