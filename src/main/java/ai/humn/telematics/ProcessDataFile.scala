@@ -19,11 +19,6 @@ object ProcessDataFile {
     // 3. Find the total mileage by driver for the whole day.
     printDriverMileages(journeySet)
 
-    // This part is the last part of the puzzle
-    // This jira was a little bit unclear.
-    // I assume that most active driver means the driver who drove the most mileage
-    // for all of the journeys.
-    // we somehow need to
     // 4. Find the most active driver - the driver who has driven the most kilometers.
     printMostActiveDriver(journeySet)
 
