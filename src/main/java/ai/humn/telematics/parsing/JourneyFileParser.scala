@@ -1,13 +1,16 @@
-package ai.humn.telematics
+package ai.humn.telematics.parsing
+
+import ai.humn.telematics.model.{Journey, JourneySet}
 
 import scala.collection.Iterator
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 
 object JourneyFileParser {
 
   /**
    * Parses a CSV source into a JourneySet
+   *
    * @param source scala.io.Source pointing to the input CSV file
    * @return JourneySet containing all (valid) journeys on the original CSV source file
    */
@@ -23,7 +26,7 @@ object JourneyFileParser {
     val validatedLines = parsedLines.filter(isValid) // drop invalid lines
 
     // Build the journeys from the input and discard those who failed to build:
-    val journeys = buildJourneys(validatedLines).collect{case Success(journey) => journey }
+    val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }
 
     // Drop invalid journeys (that built correctly but have incorrect field values):
     val validatedJourneys = journeys.filter(_.isValid)
@@ -37,6 +40,7 @@ object JourneyFileParser {
 
   /**
    * Parses a CSV line into multiple String fields
+   *
    * @param line
    * @return Array of String fields
    */
@@ -44,6 +48,7 @@ object JourneyFileParser {
 
   /**
    * Validates if a CSV line is correct
+   *
    * @param parsedLine
    * @return true if line is valid else otherwise
    */
@@ -53,6 +58,7 @@ object JourneyFileParser {
 
   /**
    * Builds an iterable of Journey objects from the parsed lines of a Journey CSV file
+   *
    * @param parsedLines
    * @return
    */
@@ -61,7 +67,8 @@ object JourneyFileParser {
   }
 
   /**
-   * Builds a Journey object from a parsed CSV line (an array of CSV fields)
+   * Tries to build a Journey object from a parsed CSV line (an array of CSV fields)
+   *
    * @param csvFields
    * @return Try[Journey] object built from the CSV fields. It can be a Success(Journey)
    *         if everything goes fine or a Failure(Exception) if some exception occurs when trying to build the Journey

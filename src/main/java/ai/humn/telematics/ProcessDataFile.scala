@@ -1,5 +1,8 @@
 package ai.humn.telematics
 
+import ai.humn.telematics.model.JourneySet
+import ai.humn.telematics.parsing.JourneyFileParser
+
 import scala.io.Source
 
 object ProcessDataFile {

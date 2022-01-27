@@ -1,5 +1,6 @@
 package ai.humn.telematics
 
+import ai.humn.telematics.model.{Journey, JourneySet}
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.junit.JUnitRunner

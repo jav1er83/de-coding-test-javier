@@ -1,4 +1,4 @@
-package ai.humn.telematics
+package ai.humn.telematics.model
 
 case class Journey(journeyId: String,
                    driverId: String,
@@ -9,8 +9,7 @@ case class Journey(journeyId: String,
                    endLat: Double,
                    endLon: Double,
                    startOdometer: Double,
-                   endOdometer: Double)
-{
+                   endOdometer: Double) {
   /** Duration in ms of a journey */
   def duration: Double = endTime - startTime
 
