@@ -2,6 +2,8 @@ package ai.humn.telematics
 
 import scala.collection.Iterator
 import scala.io.Source
+import scala.util.{Failure, Success, Try}
+import scala.util.control.Breaks.{break, breakable}
 
 object JourneyFileParser {
 
@@ -23,9 +25,10 @@ object JourneyFileParser {
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
     val validatedLines = parsedLines.filter(isValid) // drop invalid lines
 
-    val journeys = buildJourneys(validatedLines)
+    // Build the journeys from the input and discard those who failed to build:
+    val journeys = buildJourneys(validatedLines).collect{case Success(journey) => journey }
 
-    // Drop invalid journeys:
+    // Drop invalid journeys (that built correctly but have incorrect field values):
     val validatedJourneys = journeys.filter(_.isValid)
 
     // Drop duplicates:  // TODO drop duplicates of just journey id?
@@ -56,7 +59,7 @@ object JourneyFileParser {
    * @param parsedLines
    * @return
    */
-  def buildJourneys(parsedLines: Iterator[Array[String]]): Iterator[Journey] = {
+  def buildJourneys(parsedLines: Iterator[Array[String]]): Iterator[Try[Journey]] = {
     for (line <- parsedLines) yield buildJourney(line)
   }
 
@@ -65,17 +68,19 @@ object JourneyFileParser {
    * @param csvFields
    * @return Journey object built from the CSV fields
    */
-  def buildJourney(csvFields: Array[String]): Journey = {
-    Journey(journeyId = csvFields(0),
-      driverId = csvFields(1),
-      startTime = csvFields(2).toDouble,
-      endTime = csvFields(3).toDouble,
-      startLat = csvFields(4).toDouble,
-      startLon = csvFields(5).toDouble,
-      endLat = csvFields(6).toDouble,
-      endLon = csvFields(7).toDouble,
-      startOdometer = csvFields(8).toDouble,
-      endOdometer = csvFields(9).toDouble
+  def buildJourney(csvFields: Array[String]): Try[Journey] = {
+    Try(
+      Journey(journeyId = csvFields(0),
+        driverId = csvFields(1),
+        startTime = csvFields(2).toDouble,
+        endTime = csvFields(3).toDouble,
+        startLat = csvFields(4).toDouble,
+        startLon = csvFields(5).toDouble,
+        endLat = csvFields(6).toDouble,
+        endLon = csvFields(7).toDouble,
+        startOdometer = csvFields(8).toDouble,
+        endOdometer = csvFields(9).toDouble
+      )
     )
   }
 
