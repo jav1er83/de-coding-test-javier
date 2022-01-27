@@ -33,4 +33,7 @@ case class JourneySet(journeys: Seq[Journey]) {
     mileageByDriver.maxBy(_._2)
     // TODO: we could memoize the mileageByDriver for this journey set and avoid computing it again here if it was already computed
   }
+
+  //** Returns the number of journeys in the JourneySet */
+  def length: Long = journeys.length
 }

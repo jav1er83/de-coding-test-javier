@@ -15,8 +15,8 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
 
   it should "generate only valid Journeys from test file " in {
     // There is 1 duplicate and 2 invalid journeys in the test file, so it should generate only 6
-    val journeys = JourneyFileParser.parseJourneys(testSource)
-    assert(journeys.length == 6)
+    val journeySet = JourneyFileParser.parseJourneys(testSource)
+    assert(journeySet.length == 6)
   }
 
   it should "correctly parse one correct CSV line" in {
