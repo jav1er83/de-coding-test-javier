@@ -12,7 +12,13 @@ object JourneyFileParser {
    */
   def parseJourneys(source: Source): JourneySet = {
     val rawLines = source.getLines()
-    rawLines.next() // skip header
+
+    // Skip Header
+    if (rawLines.hasNext) {
+      rawLines.next()
+    }
+    else return JourneySet(Seq()) // return empty JourneySet if input has no content
+
     // Parse CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
     val validatedLines = parsedLines.filter(isValid) // drop invalid lines

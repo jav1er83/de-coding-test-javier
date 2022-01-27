@@ -19,6 +19,20 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
     assert(journeySet.length == 6)
   }
 
+  it should "generate an empty JourneySet from an empty file" in {
+    val stream: InputStream = getClass.getResourceAsStream("/empty_file.csv")
+    val testSource: Source = scala.io.Source.fromInputStream( stream )
+    val journeySet = JourneyFileParser.parseJourneys(testSource)
+    assert(journeySet.length == 0)
+  }
+
+  it should "generate an empty JourneySet from a file containing only header" in {
+    val stream: InputStream = getClass.getResourceAsStream("/only_header.csv")
+    val testSource: Source = scala.io.Source.fromInputStream( stream )
+    val journeySet = JourneyFileParser.parseJourneys(testSource)
+    assert(journeySet.length == 0)
+  }
+
   it should "correctly parse one correct CSV line" in {
     val line = "000005,driver_b,1633430362000,1633430422000,0.125,0.458,0.125,0.458,123460,123461"
     val parsedLine = JourneyFileParser.parseCsvLine(line)
