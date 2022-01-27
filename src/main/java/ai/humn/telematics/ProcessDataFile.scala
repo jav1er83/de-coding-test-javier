@@ -30,8 +30,7 @@ object ProcessDataFile {
 
   def parseCmdParams(args: Array[String]): String = {
     if (args.length == 0) {
-      println("Please, provide an input path to process. Example:")
-      println("ProcessDataFile ./2021-10-05_journeys.csv")
+      println("Please, specify an input path to process. Example: /path/to/2021-10-05_journeys.csv")
       System.exit(0)
     }
     args(0)
