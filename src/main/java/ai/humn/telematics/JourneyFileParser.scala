@@ -3,7 +3,6 @@ package ai.humn.telematics
 import scala.collection.Iterator
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
-import scala.util.control.Breaks.{break, breakable}
 
 object JourneyFileParser {
 
@@ -16,9 +15,7 @@ object JourneyFileParser {
     val rawLines = source.getLines()
 
     // Skip Header
-    if (rawLines.hasNext) {
-      rawLines.next()
-    }
+    if (rawLines.hasNext) rawLines.next()
     else return JourneySet(Seq()) // return empty JourneySet if input has no content
 
     // Parse CSV Lines
@@ -31,7 +28,7 @@ object JourneyFileParser {
     // Drop invalid journeys (that built correctly but have incorrect field values):
     val validatedJourneys = journeys.filter(_.isValid)
 
-    // Drop duplicates:  // TODO drop duplicates of just journey id?
+    // Drop duplicates:  // TODO drop duplicates taking into account only journeyId?
     val dedupJourneys = validatedJourneys.toStream.distinct
 
     // Build a JourneySet with the deduplicated & validated journeys:
