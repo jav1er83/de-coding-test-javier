@@ -31,10 +31,10 @@ case class JourneySet(journeys: Seq[Journey]) {
    *
    * @return a tuple containing (driverId, totalMileage) for the most active driver in the JourneySet
    */
-  def mostActiveDriver: (String, Double) = {
+  def mostActiveDriver: Option[(String, Double)] = {
     // This is a way of obtaining the (key, value) of a Map that has the maximum value: (https://stackoverflow.com/a/39713197/437012)
-    mileageByDriver.maxBy(_._2)
-    // TODO: we could memoize the mileageByDriver for this journey set and avoid computing it again here if it was already computed
+    val driverMileages = mileageByDriver
+    if (driverMileages.isEmpty) None else Some(driverMileages.maxBy(_._2))
   }
 
   //** Returns the number of journeys in the JourneySet */

@@ -21,12 +21,13 @@ object JourneyFileParser {
     if (rawLines.hasNext) rawLines.next()
     else return JourneySet(Seq()) // return empty JourneySet if input has no content
 
-    // Parse CSV Lines
+    // Parse and validate CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
     val validatedLines = parsedLines.filter(isValid) // drop invalid lines
 
-    // Build the journeys from the input and discard those who failed to build:
+    // Build the journeys from the input and discard those Journeys that failed to build:
     val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }
+    //val journeys = buildJourneys(validatedLines).toStream.filter(_.isSuccess).map(_.get)
 
     // Drop invalid journeys (that built correctly but have incorrect field values):
     val validatedJourneys = journeys.filter(_.isValid)

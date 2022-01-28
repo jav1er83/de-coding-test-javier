@@ -71,8 +71,11 @@ object ProcessDataFile {
   }
 
   def printMostActiveDriver(journeySet: JourneySet) {
-    val (mostActiveDriverId, _) = journeySet.mostActiveDriver
-    println("Most active driver is "+mostActiveDriverId)
+    val mostActiveDriverInfo: Option[(String, Double)] = journeySet.mostActiveDriver
+    mostActiveDriverInfo match {
+      case Some(x) => println("Most active driver is "+x._1)
+      case None => print("No active driver could be extracted from the dataset")
+    }
     println
   }
 }
