@@ -77,5 +77,13 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
     assert(journey isFailure)
   }
 
+  it should "detect 2 journeys with the same journeyID and differences in other fields as duplicates" in {
+    // this file has 2 rows with the same journeyID but differences in other fields. Should generate only 2 journeys
+    val stream: InputStream = getClass.getResourceAsStream("/file_with_pseudo_duplicated_rows.csv")
+    val testSource: Source = scala.io.Source.fromInputStream( stream )
+    val journeySet = JourneyFileParser.parseJourneys(testSource)
+    assert(journeySet.length == 2)
+  }
+
 
 }
