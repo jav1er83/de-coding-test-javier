@@ -2,7 +2,6 @@ package ai.humn.telematics.parsing
 
 import ai.humn.telematics.model.{Journey, JourneySet}
 
-import scala.collection.Iterator
 import scala.io.Source
 import scala.util.{Success, Try}
 
@@ -23,20 +22,20 @@ object JourneyFileParser {
 
     // Parse and validate CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
-    val validatedLines = parsedLines.filter(isValid) // drop invalid lines
+    val validatedLines = parsedLines.filter(isValid).toSeq // drop invalid lines
 
     // Build the journeys from the input and discard those Journeys that failed to build:
     val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }
-    //val journeys = buildJourneys(validatedLines).toStream.filter(_.isSuccess).map(_.get)
+    //val journeys = buildJourneys(validatedLines).filter(_.isSuccess).map(_.get)
 
     // Drop invalid journeys (that built correctly but have incorrect field values):
     val validatedJourneys = journeys.filter(_.isValid)
 
-    // Drop duplicates:  // TODO drop duplicates taking into account only journeyId?
-    val dedupJourneys = validatedJourneys.toStream.distinct
+    // Drop duplicates based on journeyID
+    val deduplicatedJourneys = deduplicateJourneys(validatedJourneys)
 
     // Build a JourneySet with the deduplicated & validated journeys:
-    JourneySet(dedupJourneys)
+    JourneySet(deduplicatedJourneys)
   }
 
   /**
@@ -63,7 +62,7 @@ object JourneyFileParser {
    * @param parsedLines
    * @return
    */
-  def buildJourneys(parsedLines: Iterator[Array[String]]): Iterator[Try[Journey]] = {
+  def buildJourneys(parsedLines: Seq[Array[String]]): Seq[Try[Journey]] = {
     for (line <- parsedLines) yield buildJourney(line)
   }
 
@@ -88,6 +87,15 @@ object JourneyFileParser {
         endOdometer = csvFields(9).toDouble
       )
     )
+  }
+
+  /**
+   * Removes duplicate Journeys, based on journeyId field.
+   * If more than one journey is found with the same journeyId, it keeps the one that appears first in the file
+   * @param journeys to be deduplicated
+   */
+  def deduplicateJourneys(journeys: Seq[Journey]): Seq[Journey] = {
+    journeys.groupBy(_.journeyId).map(_._2.head).toSeq
   }
 
 
