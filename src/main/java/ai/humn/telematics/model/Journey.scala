@@ -35,4 +35,8 @@ case class Journey(journeyId: String,
   def isValid: Boolean = {
     duration >= 0 & distance >= 0
   }
+
+  def summary: String = {
+    "journeyId: "+journeyId+" "+driverId+" distance "+distance+" durationMS "+duration+" avgSpeed in kph was "+avgSpeed
+  }
 }
