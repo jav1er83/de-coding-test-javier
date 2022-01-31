@@ -17,11 +17,11 @@ case class JourneySet(journeys: Seq[Journey]) {
     var driverDistances = Map[String, Double]()
     for (journey <- journeys) {
       if (driverDistances.contains(journey.driverId)) {
-        val newDistance = driverDistances(journey.driverId) + journey.distance
+        val newDistance = driverDistances(journey.driverId) + journey.distanceKm
         driverDistances = driverDistances + (journey.driverId -> newDistance)
       }
       else {
-        driverDistances = driverDistances + (journey.driverId -> journey.distance)
+        driverDistances = driverDistances + (journey.driverId -> journey.distanceKm)
       }
     }
     driverDistances

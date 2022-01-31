@@ -41,7 +41,7 @@ object ProcessDataFile {
   def printLongJourneys(journeySet: JourneySet)  {
     println("Journeys of 90 minutes or more.")
     for (journey <- journeySet.journeys) {
-      if (journey.duration > LONG_JOURNEY_DURATION) println(journey.summary)
+      if (journey.durationMs > LONG_JOURNEY_DURATION) println(journey.summary)
     }
     println
   }
