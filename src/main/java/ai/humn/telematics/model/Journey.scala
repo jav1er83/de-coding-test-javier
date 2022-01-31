@@ -37,6 +37,7 @@ case class Journey(journeyId: String,
   }
 
   def summary: String = {
-    "journeyId: "+journeyId+" "+driverId+" distance "+distance+" durationMS "+duration+" avgSpeed in kph was "+avgSpeed
+    val durationInt = duration.toInt
+    "journeyId: "+journeyId+" "+driverId+" distance "+f"$distance%5s"+" durationMS "+f"$durationInt%8s"+" avgSpeed in kph was "+f"$avgSpeed%1.2f"
   }
 }
