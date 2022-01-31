@@ -7,8 +7,8 @@ import scala.io.Source
 
 /**
  * Version of ProcessDataFile optimized for processing Big files:
- * We do only one pass, line by line, on the contents of the file, avoiding to load it completely into memory.
- * We only keep in memory strictly necessary info for the aggregations: journeys longer than 90 minutes, and driver distances.
+ * We do two passes on the journey dataset, line by line, avoiding to load it completely into memory.
+ * We only keep in memory strictly necessary info for the aggregations: driver distances.
  *
  * This performance improvement is done at the cost of a somewhat less clean/tidy code
  */
