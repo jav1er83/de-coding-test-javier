@@ -20,9 +20,15 @@ object ProcessDataFile {
 
     val inputPath = parseCmdParams(args)
 
-    val source = Source.fromFile(inputPath)
+    var source = Source.fromFile(inputPath)
     try{
-      val journeys = JourneyFileParser.parseJourneySet(source)
+      var journeys = JourneyFileParser.parseJourneySet(source)
+      printLongJourneys(journeys)
+
+      // Do a 2nd pass over the file for the rest of stats
+      source.close()
+      source = Source.fromFile(inputPath)
+      journeys = JourneyFileParser.parseJourneySet(source)
       printStats(journeys)
     }
     finally {
@@ -38,10 +44,17 @@ object ProcessDataFile {
     args(0)
   }
 
+  def printLongJourneys(journeys: Iterator[Journey]) {
+    println("Journeys of 90 minutes or more.")
+    for (journey <- journeys) {
+      if (journey.durationMs > LONG_JOURNEY_DURATION) println(journey.summary)
+    }
+    println
+  }
+
   def printStats(journeys: Iterator[Journey]) {
     var seenJourneyIds = Set[String]()
     var driverDistances = Map[String, Double]()
-    var longJourneys = Set[Journey]()
 
     println("Average speeds in Kph")
     for (journey <- journeys) {
@@ -50,15 +63,7 @@ object ProcessDataFile {
         println(journey.summary)
 
         driverDistances = updateDriverDistance(driverDistances, journey)
-
-        if (journey.durationMs > LONG_JOURNEY_DURATION) longJourneys += journey
       }
-    }
-    println
-
-    println("Journeys of 90 minutes or more.")
-    for (journey <- longJourneys) {
-      println(journey.summary)
     }
     println
 
