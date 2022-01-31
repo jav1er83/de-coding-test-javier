@@ -51,7 +51,7 @@ object ProcessDataFile {
 
         driverDistances = updateDriverDistance(driverDistances, journey)
 
-        if (journey.duration > LONG_JOURNEY_DURATION) longJourneys += journey
+        if (journey.durationMs > LONG_JOURNEY_DURATION) longJourneys += journey
       }
     }
     println
@@ -79,11 +79,11 @@ object ProcessDataFile {
 
   def updateDriverDistance(driverDistances: Map[String, Double], journey: Journey): Map[String, Double] = {
     if (driverDistances.contains(journey.driverId)) {
-      val newDistance = driverDistances(journey.driverId) + journey.distance
+      val newDistance = driverDistances(journey.driverId) + journey.distanceKm
       driverDistances + (journey.driverId -> newDistance)
     }
     else {
-      driverDistances + (journey.driverId -> journey.distance)
+      driverDistances + (journey.driverId -> journey.distanceKm)
     }
   }
 
