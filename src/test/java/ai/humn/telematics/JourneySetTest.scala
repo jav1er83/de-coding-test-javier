@@ -1,6 +1,6 @@
 package ai.humn.telematics
 
-import ai.humn.telematics.model.{Journey, JourneySet}
+import ai.humn.telematics.model.{Driver, Journey, JourneySet}
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.junit.JUnitRunner
@@ -23,7 +23,7 @@ class JourneySetTest extends FlatSpec with Matchers {
     val journey2 = Journey("000002","driver_b",1633430362000.0d,1633430422000.0d,0.125d,0.458d,0.125d,0.458d,123460.0d,123471.0d)
     val journey3 = Journey("000003","driver_a",1633430362000.0d,1633430422000.0d,0.125d,0.458d,0.125d,0.458d,123460.0d,123499.0d)
     val journeySet = JourneySet(Seq(journey1, journey2, journey3))
-    assert(journeySet.mostActiveDriver === Some("driver_a", 40.0d))
+    assert(journeySet.mostActiveDriver === Some(Driver("driver_a", 40.0d)))
   }
 
 }

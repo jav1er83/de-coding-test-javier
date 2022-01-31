@@ -1,6 +1,6 @@
 package ai.humn.telematics
 
-import ai.humn.telematics.model.JourneySet
+import ai.humn.telematics.model.{Driver, JourneySet}
 import ai.humn.telematics.parsing.JourneyFileParser
 
 import scala.io.Source
@@ -65,9 +65,9 @@ object ProcessDataFile {
   }
 
   def printMostActiveDriver(journeySet: JourneySet) {
-    val mostActiveDriverInfo: Option[(String, Double)] = journeySet.mostActiveDriver
+    val mostActiveDriverInfo: Option[Driver] = journeySet.mostActiveDriver
     mostActiveDriverInfo match {
-      case Some(x) => println("Most active driver is "+x._1)
+      case Some(driver) => println("Most active driver is "+driver.id)
       case None => print("No active driver could be extracted from the dataset")
     }
     println
