@@ -32,7 +32,9 @@ object JourneyFileParser {
     val validatedJourneys = journeys.filter(_.isValid)
 
     // Drop duplicates based on journeyID
-    val deduplicatedJourneys = deduplicateJourneys(validatedJourneys)
+    val deduplicatedJourneys = deduplicateJourneysById(validatedJourneys)
+    //If we want to deduplicate based an ALL fields, just use distinct:
+    //val deduplicatedJourneys = validatedJourneys.distinct
 
     // Build a JourneySet with the deduplicated & validated journeys:
     JourneySet(deduplicatedJourneys)
@@ -94,8 +96,8 @@ object JourneyFileParser {
    * If more than one journey is found with the same journeyId, it keeps the one that appears first in the file
    * @param journeys to be deduplicated
    */
-  def deduplicateJourneys(journeys: Seq[Journey]): Seq[Journey] = {
-    journeys.groupBy(_.journeyId).map(_._2.head).toSeq
+  def deduplicateJourneysById(journeys: Seq[Journey]): Seq[Journey] = {
+    journeys.groupBy(_.journeyId).map(_._2.head).toSeq.sortBy(_.journeyId)
   }
 
 
