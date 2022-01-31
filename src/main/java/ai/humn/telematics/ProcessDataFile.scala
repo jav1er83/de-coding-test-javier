@@ -13,26 +13,19 @@ object ProcessDataFile {
 
     val inputPath = parseCmdParams(args)
 
-    // Load file content into a scala.io.Source:
     val source = Source.fromFile(inputPath)
     try{
-      // Parse input CSV file into a JourneySet:
       val journeySet = JourneyFileParser.parseJourneys(source)
 
-      // 1. Find journeys that are 90 minutes or more.
       printLongJourneys(journeySet)
 
-      // 2. Find the average speed per journey in kph.
       printAvgSpeeds(journeySet)
 
-      // 3. Find the total mileage by driver for the whole day.
       printDriverMileages(journeySet)
 
-      // 4. Find the most active driver - the driver who has driven the most kilometers.
       printMostActiveDriver(journeySet)
     }
     finally {
-      // Always close the input file
       source.close()
     }
   }
