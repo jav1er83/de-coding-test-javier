@@ -14,13 +14,14 @@ case class JourneySet(journeys: Seq[Journey]) {
    * @return a Map of driverId -> total mileage
    */
   def mileageByDriver: Map[String, Double] = {
-    val driverDistances = scala.collection.mutable.Map[String, Double]()
+    var driverDistances = Map[String, Double]()
     for (journey <- journeys) {
       if (driverDistances.contains(journey.driverId)) {
-        driverDistances(journey.driverId) = driverDistances(journey.driverId) + journey.distance
+        val newDistance = driverDistances(journey.driverId) + journey.distance
+        driverDistances = driverDistances + (journey.driverId -> newDistance)
       }
       else {
-        driverDistances(journey.driverId) = journey.distance
+        driverDistances = driverDistances + (journey.driverId -> journey.distance)
       }
     }
     driverDistances.toMap
