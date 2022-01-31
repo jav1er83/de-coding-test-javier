@@ -39,15 +39,15 @@ object ProcessDataFile {
   }
 
   def printLongJourneys(journeySet: JourneySet)  {
-    println("Journeys longer than 90 minutes:")
+    println("Journeys of 90 minutes or more.")
     for (journey <- journeySet.journeys) {
-      if (journey.duration > LONG_JOURNEY_DURATION) println(journey)
+      if (journey.duration > LONG_JOURNEY_DURATION) println(journey.summary)
     }
     println
   }
 
   def printAvgSpeeds(journeySet: JourneySet) {
-    println("Average speed per (valid) journey:")
+    println("Average speeds in Kph")
     for (journey <- journeySet.journeys) {
       println(journey.summary)
     }
@@ -58,7 +58,8 @@ object ProcessDataFile {
 
     println("Mileage By Driver")
     for ((driverId, distance) <- journeySet.mileageByDriver) {
-      println(driverId+" drove "+ distance+" kilometers")
+      val distanceInt = distance.toInt
+      println(driverId+" drove "+ f"$distanceInt%4s"+" kilometers")
     }
     println
   }
