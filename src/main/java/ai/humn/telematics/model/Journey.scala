@@ -29,7 +29,8 @@ case class Journey(journeyId: String,
     distanceKm / durationInHours
   }
 
-  def isValid: Boolean = durationMs >= 0 & distanceKm >= 0
+  def isValid: Boolean =
+    durationMs >= 0 & distanceKm >= 0
 
   def summary: String = {
     val durationInt = durationMs.toInt
