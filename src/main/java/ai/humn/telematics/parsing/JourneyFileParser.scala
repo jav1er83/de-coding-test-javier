@@ -1,6 +1,6 @@
 package ai.humn.telematics.parsing
 
-import ai.humn.telematics.model.{Journey, JourneySet}
+import ai.humn.telematics.model.Journey
 
 import scala.io.Source
 import scala.util.{Success, Try}
@@ -13,29 +13,23 @@ object JourneyFileParser {
    * @param source scala.io.Source pointing to the input CSV file
    * @return JourneySet containing all (valid) journeys on the original CSV source file
    */
-  def parseJourneys(source: Source): JourneySet = {
-    val rawLines = source.getLines()
+  def parseJourneySet(source: Source): Iterator[Journey] = {
+    val rawLines = source.getLines() // Iterator on input file lines
 
     // Skip Header
     if (rawLines.hasNext) rawLines.next()
-    else return JourneySet(Seq()) // return empty JourneySet if input has no content
+    else return Iterator() // return empty JourneySet if input has no content
 
-    // Parse and validate CSV Lines
-    val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
-    val validatedLines = parsedLines.filter(isValid).toSeq // drop invalid lines
+    // Parse and validate CSV Lines:
+    val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine) // Iterator on parsed lines
+    val validatedLines = parsedLines.filter(isValid) // Iterator with invalid lines dropped
 
     // Build the journeys from the input and discard those Journeys that failed to build:
-    val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }
+    val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }  // Iterator on Journeys
     //val journeys = buildJourneys(validatedLines).filter(_.isSuccess).map(_.get)
 
     // Drop invalid journeys (that built correctly but have incorrect field values):
-    val validatedJourneys = journeys.filter(_.isValid)
-
-    // Drop duplicates based on journeyID
-    val deduplicatedJourneys = deduplicateJourneys(validatedJourneys)
-
-    // Build a JourneySet with the deduplicated & validated journeys:
-    JourneySet(deduplicatedJourneys)
+    journeys.filter(_.isValid)  // Iterator with invalid Journeys dropped
   }
 
   /**
@@ -62,7 +56,7 @@ object JourneyFileParser {
    * @param parsedLines
    * @return
    */
-  def buildJourneys(parsedLines: Seq[Array[String]]): Seq[Try[Journey]] = {
+  def buildJourneys(parsedLines: Iterator[Array[String]]): Iterator[Try[Journey]] = {
     for (line <- parsedLines) yield buildJourney(line)
   }
 
@@ -87,15 +81,6 @@ object JourneyFileParser {
         endOdometer = csvFields(9).toDouble
       )
     )
-  }
-
-  /**
-   * Removes duplicate Journeys, based on journeyId field.
-   * If more than one journey is found with the same journeyId, it keeps the one that appears first in the file
-   * @param journeys to be deduplicated
-   */
-  def deduplicateJourneys(journeys: Seq[Journey]): Seq[Journey] = {
-    journeys.groupBy(_.journeyId).map(_._2.head).toSeq
   }
 
 
