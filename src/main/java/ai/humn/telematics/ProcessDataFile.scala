@@ -20,15 +20,12 @@ object ProcessDataFile {
 
     val inputPath = parseCmdParams(args)
 
-    // Load file content into a scala.io.Source:
     val source = Source.fromFile(inputPath)
     try{
-      // Parse input CSV file into a JourneySet:
       val journeys = JourneyFileParser.parseJourneySet(source)
       printStats(journeys)
     }
     finally {
-      // Always close the input file
       source.close()
     }
   }
@@ -42,9 +39,9 @@ object ProcessDataFile {
   }
 
   def printStats(journeys: Iterator[Journey]) {
-    var seenJourneyIds = Set[String]()  // used to avoid duplicates
-    var driverDistances = Map[String, Double]()  // aggregation: distance per driver
-    var longJourneys = Set[Journey]()  // keep in memory only journeys longer than 90 mins
+    var seenJourneyIds = Set[String]()
+    var driverDistances = Map[String, Double]()
+    var longJourneys = Set[Journey]()
 
     println("Average speed per (valid) journey:")
     for (journey <- journeys) {
