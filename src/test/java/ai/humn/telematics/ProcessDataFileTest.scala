@@ -1,6 +1,6 @@
 package ai.humn.telematics
 
-import ai.humn.telematics.model.Journey
+import ai.humn.telematics.model.{Gps, Journey}
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.junit.JUnitRunner
@@ -10,7 +10,7 @@ class ProcessDataFileTest extends FlatSpec with Matchers {
 
 
   it should "correctly update driver distance in a bunch of journeys" in {
-    val journey1 = Journey("000001","driver_a",1633430362000.0d,1633430422000.0d,0.125d,0.458d,0.125d,0.458d,123460.0d,123461.0d)
+    val journey1 = Journey("000001","driver_a",1633430362000.0d,1633430422000.0d,Gps(0.125d,0.458d),Gps(0.125d,0.458d),123460.0d,123461.0d)
 
     var driverDistances = Map[String, Double]("driver_a" -> 100.0)
 

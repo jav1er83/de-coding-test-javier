@@ -1,13 +1,13 @@
 package ai.humn.telematics.model
 
+case class Gps(lat: Double, lon: Double)
+
 case class Journey(journeyId: String,
                    driverId: String,
                    startTime: Double,
                    endTime: Double,
-                   startLat: Double,
-                   startLon: Double,
-                   endLat: Double,
-                   endLon: Double,
+                   startPos: Gps,
+                   endPos: Gps,
                    startOdometer: Double,
                    endOdometer: Double) {
 

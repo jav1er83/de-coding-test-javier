@@ -1,6 +1,6 @@
 package ai.humn.telematics
 
-import ai.humn.telematics.model.Journey
+import ai.humn.telematics.model.{Gps, Journey}
 import ai.humn.telematics.parsing.JourneyFileParser
 import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
@@ -61,7 +61,7 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
 
   it should "correctly build a journey from a valid parsed line" in {
     val parsedLine = Array("000005","driver_b","1633430362000","1633430422000","0.125","0.458","0.125","0.458","123460","123461")
-    val expected = Success(Journey("000005","driver_b",1633430362000.0d,1633430422000.0d,0.125d,0.458d,0.125d,0.458d,123460.0d,123461.0d))
+    val expected = Success(Journey("000005","driver_b",1633430362000.0d,1633430422000.0d,Gps(0.125d,0.458d),Gps(0.125d,0.458d),123460.0d,123461.0d))
     assert(JourneyFileParser.buildJourney(parsedLine) === expected)
   }
 
