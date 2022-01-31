@@ -7,6 +7,8 @@ import scala.io.Source
 
 object ProcessDataFile {
 
+  val LONG_JOURNEY_DURATION = 90 * 60 * 1000 // 90 minutes
+
   def main(args: Array[String]): Unit = {
 
     val inputPath = parseCmdParams(args)
@@ -46,17 +48,15 @@ object ProcessDataFile {
   def printLongJourneys(journeySet: JourneySet)  {
     println("Journeys longer than 90 minutes:")
     for (journey <- journeySet.journeys) {
-      val ninetyMins = 90 * 60 * 1000
-      if (journey.duration > ninetyMins) println(journey)
+      if (journey.duration > LONG_JOURNEY_DURATION) println(journey)
     }
     println
   }
 
   def printAvgSpeeds(journeySet: JourneySet) {
     println("Average speed per (valid) journey:")
-    for (j <- journeySet.journeys) {
-      val journeySummary = "journeyId: "+j.journeyId+" "+j.driverId+" distance "+j.distance+" durationMS "+j.duration+" avgSpeed in kph was "+j.avgSpeed
-      println(journeySummary)
+    for (journey <- journeySet.journeys) {
+      println(journey.summary)
     }
     println
   }
