@@ -45,9 +45,14 @@ object ProcessDataFile {
   }
 
   def printLongJourneys(journeys: Iterator[Journey]) {
+    var seenJourneyIds = Set[String]()
+
     println("Journeys of 90 minutes or more.")
     for (journey <- journeys) {
-      if (journey.durationMs > LONG_JOURNEY_DURATION) println(journey.summary)
+      if (!seenJourneyIds.contains(journey.journeyId)) { // This avoids processing duplicate journeys
+        seenJourneyIds += journey.journeyId
+        if (journey.durationMs > LONG_JOURNEY_DURATION) println(journey.summary)
+      }
     }
     println
   }
