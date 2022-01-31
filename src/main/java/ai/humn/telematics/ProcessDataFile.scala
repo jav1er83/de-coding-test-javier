@@ -43,7 +43,7 @@ object ProcessDataFile {
     var driverDistances = Map[String, Double]()
     var longJourneys = Set[Journey]()
 
-    println("Average speed per (valid) journey:")
+    println("Average speeds in Kph")
     for (journey <- journeys) {
       if (!seenJourneyIds.contains(journey.journeyId)) { // This avoids processing duplicate journeys
         seenJourneyIds += journey.journeyId
@@ -56,7 +56,7 @@ object ProcessDataFile {
     }
     println
 
-    println("Journeys longer than 90 minutes:")
+    println("Journeys of 90 minutes or more.")
     for (journey <- longJourneys) {
       println(journey.summary)
     }
@@ -64,7 +64,8 @@ object ProcessDataFile {
 
     println("Mileage By Driver")
     for ((driverId, distance) <- driverDistances) {
-      println(driverId+" drove "+ distance+" kilometers")
+      val distanceInt = distance.toInt
+      println(driverId+" drove "+ f"$distanceInt%4s"+" kilometers")
     }
     println
 
