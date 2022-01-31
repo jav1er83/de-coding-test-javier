@@ -5,6 +5,13 @@ import ai.humn.telematics.parsing.JourneyFileParser
 
 import scala.io.Source
 
+/**
+ * Version of ProcessDataFile optimized for processing Big files:
+ * We do only one pass, line by line, on the contents of the file, avoiding to load it completely into memory.
+ * We only keep in memory strictly necessary info for the aggregations: journeys longer than 90 minutes, and driver distances.
+ *
+ * This performance improvement is done at the cost of a somewhat less clean/tidy code
+ */
 object ProcessDataFile {
 
   val LONG_JOURNEY_DURATION = 90 * 60 * 1000 // 90 minutes
