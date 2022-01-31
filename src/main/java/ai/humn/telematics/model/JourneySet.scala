@@ -24,7 +24,7 @@ case class JourneySet(journeys: Seq[Journey]) {
         driverDistances = driverDistances + (journey.driverId -> journey.distance)
       }
     }
-    driverDistances.toMap
+    driverDistances
   }
 
   /**
