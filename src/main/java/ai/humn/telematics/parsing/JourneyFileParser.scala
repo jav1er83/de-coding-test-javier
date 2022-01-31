@@ -1,6 +1,6 @@
 package ai.humn.telematics.parsing
 
-import ai.humn.telematics.model.{Journey, JourneySet}
+import ai.humn.telematics.model.{Gps, Journey, JourneySet}
 
 import scala.io.Source
 import scala.util.{Success, Try}
@@ -81,10 +81,8 @@ object JourneyFileParser {
         driverId = csvFields(1),
         startTime = csvFields(2).toDouble,
         endTime = csvFields(3).toDouble,
-        startLat = csvFields(4).toDouble,
-        startLon = csvFields(5).toDouble,
-        endLat = csvFields(6).toDouble,
-        endLon = csvFields(7).toDouble,
+        startPos = Gps(csvFields(4).toDouble, csvFields(5).toDouble),
+        endPos = Gps(csvFields(6).toDouble, csvFields(7).toDouble),
         startOdometer = csvFields(8).toDouble,
         endOdometer = csvFields(9).toDouble
       )
