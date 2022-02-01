@@ -68,7 +68,7 @@ class JourneyFileParserTest extends FlatSpec with Matchers {
   it should "detect a line with missing fields as invalid" in {
     val line = "000005,driver_b,1633430362000,1633430422000,0.125,0.458,0.125,3460,123461"
     val parsedLine = JourneyFileParser.parseCsvLine(line)
-    assert(!JourneyFileParser.isValid(parsedLine))
+    assert(!JourneyFileParser.hasCorrectNumberOfColumns(parsedLine))
   }
 
   it should "return a failure when building a journey from a line with incorrect fields" in {

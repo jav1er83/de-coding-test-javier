@@ -22,7 +22,7 @@ object JourneyFileParser {
 
     // Parse and validate CSV Lines
     val parsedLines = for (rawLine <- rawLines) yield parseCsvLine(rawLine)
-    val validatedLines = parsedLines.filter(isValid).toSeq // drop invalid lines
+    val validatedLines = parsedLines.filter(hasCorrectNumberOfColumns).toSeq // drop invalid lines
 
     // Build the journeys from the input and discard those Journeys that failed to build:
     val journeys = buildJourneys(validatedLines).collect { case Success(journey) => journey }
@@ -54,7 +54,7 @@ object JourneyFileParser {
    * @param parsedLine
    * @return true if line is valid else otherwise
    */
-  def isValid(parsedLine: Array[String]): Boolean = {
+  def hasCorrectNumberOfColumns(parsedLine: Array[String]): Boolean = {
     parsedLine.length == 10
   }
 
